@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プライバシーポリシー — 最強プラチナクエスト</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --bg: #05060f; --text: #e8eaf2; --muted: #9aa0b8; --accent: #9fc6ff; --line: #2b3050; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    line-height: 1.9;
+  }
+  main { max-width: 780px; margin: 0 auto; padding: 56px 20px 80px; }
+  h1 { font-size: 1.6rem; margin-bottom: 8px; }
+  .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 36px; }
+  h2 { font-size: 1.15rem; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  p { margin: 12px 0; }
+  strong { color: #fff; }
+  a { color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.95rem; }
+  th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+  th { background: #10132a; font-weight: normal; color: var(--muted); white-space: nowrap; }
+  ol { padding-left: 1.6em; }
+  ol li { margin: 10px 0; }
+  .back { display: inline-block; margin-top: 48px; color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>プライバシーポリシー</h1>
+  <p class="meta">
+    <strong>アプリ名</strong>: 最強プラチナクエスト(旧称: 最強プラチナハンター)<br>
+    <strong>最終更新日</strong>: 2026年8月1日
+  </p>
+
+  <p>本プライバシーポリシーは、Android アプリ「最強プラチナクエスト」(以下「本アプリ」)における利用者情報の取り扱いを定めるものです。</p>
+
+  <h2>基本方針</h2>
+  <p>本アプリは、<strong>利用者のデータを開発者のサーバーへ送信・収集しません</strong>。計測データはすべて利用者の端末内にのみ保存されます。</p>
+
+  <h2>本アプリが端末内で取り扱う情報</h2>
+  <p>本アプリは以下の情報を取得し、<strong>端末内のデータベースにのみ</strong>保存します。</p>
+  <table>
+    <tr><th>情報</th><th>用途</th></tr>
+    <tr>
+      <td>位置情報(GPS による緯度・経度)</td>
+      <td>電波計測地点の記録、地図上への表示、スポットへのチェックイン</td>
+    </tr>
+    <tr>
+      <td>電波情報(基地局ID、電波種別、電界強度、バンド、応答時間)</td>
+      <td>電波状況の記録・可視化、およびゲーム要素(モンスター生成)のシード</td>
+    </tr>
+  </table>
+  <p>これらの情報が利用者の操作なしに端末外へ送信されることはありません。アプリをアンインストールすると、これらのデータはすべて削除されます。また、端末のクラウドバックアップ・端末間転送の対象からも計測データベースを除外しています。</p>
+
+  <h2>通信について</h2>
+  <p>本アプリは以下の目的でのみインターネット通信を行います。</p>
+  <ol>
+    <li><strong>地図タイルの取得</strong>: 地図表示のため OpenStreetMap のタイルサーバーへ画像を要求します。この際、通信の仕組み上、IPアドレスと表示中の地図範囲(タイル座標)がタイルサーバーに送信されます。取り扱いは <a href="https://osmfoundation.org/wiki/Privacy_Policy">OpenStreetMap Foundation のプライバシーポリシー</a>に従います。</li>
+    <li><strong>応答時間(RTT)の計測</strong>: 通信品質の測定のため、Google の接続確認用エンドポイント(<code>https://www.gstatic.com/generate_204</code>)へ軽量なリクエストを送信します。位置情報等のデータは一切含まれません。</li>
+    <li><strong>スピードテスト</strong>: 利用者がスピードテストを実行した場合に限り、Cloudflare の速度計測用エンドポイントとの間でテストデータを送受信します。保存済みの位置情報や電波情報はリクエストに含まれません。通信先では仕組み上 IP アドレスが取り扱われます。</li>
+  </ol>
+
+  <h2>データのエクスポート</h2>
+  <p>CSV エクスポート・JSON バックアップ機能は、利用者が自分の意思で操作した場合にのみ、端末内のデータをファイルとして出力・共有するものです。共有先の選択は利用者に委ねられ、開発者がその内容を受け取ることはありません。</p>
+
+  <h2>本アプリが利用する権限</h2>
+  <table>
+    <tr><th>権限</th><th>目的</th></tr>
+    <tr>
+      <td>位置情報(正確な位置・おおよその位置)</td>
+      <td>計測地点の記録と地図表示。計測実行中は、アプリを閉じた後もバックグラウンドで(通知表示のもと)計測を継続するため位置情報を取得し続けます。計測を停止すればバックグラウンドでの取得も停止します</td>
+    </tr>
+    <tr>
+      <td>電話の状態の読み取り(Android 9 以前のみ)</td>
+      <td>基地局情報の取得に必要なため</td>
+    </tr>
+    <tr>
+      <td>インターネット / ネットワーク状態</td>
+      <td>地図タイル取得と応答時間計測</td>
+    </tr>
+    <tr>
+      <td>バイブレーション</td>
+      <td>モンスター発見時の通知演出</td>
+    </tr>
+  </table>
+
+  <h2>広告・解析・第三者提供</h2>
+  <p>本アプリは広告 SDK・アクセス解析 SDK を一切使用しておらず、利用者の情報を販売しません。上記「通信について」に記載したサービスへの通信を除き、保存した位置情報や電波情報を開発者または第三者へ送信しません。</p>
+
+  <h2>お問い合わせ</h2>
+  <p>本ポリシーに関するお問い合わせは、Google Play ストアの掲載ページに記載の開発者連絡先までお願いします。</p>
+
+  <h2>改定</h2>
+  <p>本ポリシーを改定する場合は、本ページを更新します。重要な変更がある場合はアプリの更新情報等で告知します。</p>
+
+  <a class="back" href="./index.html">← トップページへもどる</a>
+</main>
+</body>
+</html>

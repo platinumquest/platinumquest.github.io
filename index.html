@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>最強プラチナクエスト — 電波をあつめてモンスターをつかまえろ</title>
+<meta name="description" content="移動しながら電波を計測し、基地局ごとに生まれるモンスターを集めるレトロRPG風Androidアプリ「最強プラチナクエスト」の公式ページ。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05060f;
+    --window-bg: #0a0c1a;
+    --frame: #f5f5f5;
+    --text: #f5f5f5;
+    --accent: #ffd700;
+    --platinum: #e5e4e2;
+    --cyan: #00e5ff;
+    --purple: #ab47bc;
+    --blue: #1e88e5;
+    --green: #43a047;
+    --brown: #8d6e63;
+    --gray: #9e9e9e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DotGothic16', 'Hiragino Kaku Gothic ProN', 'Meiryo', monospace, sans-serif;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ===== 星空背景 ===== */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 78% 12%, #fff 50%, transparent 51%),
+      radial-gradient(2px 2px at 34% 68%, #cfd8ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 62% 42%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 88% 76%, #ffe9a8 50%, transparent 51%),
+      radial-gradient(2px 2px at 8% 84%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 46% 8%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 92% 34%, #b0f7ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 22% 48%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 55% 88%, #fff 50%, transparent 51%);
+    animation: twinkle 3.2s steps(2) infinite;
+  }
+  @keyframes twinkle { 50% { opacity: 0.55; } }
+
+  main { position: relative; z-index: 1; }
+
+  /* ===== レトロRPG風ウィンドウ(一般的な様式) ===== */
+  .window {
+    background: var(--window-bg);
+    border: 3px solid var(--frame);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 3px var(--window-bg), inset 0 0 0 5px var(--frame);
+    padding: 28px 26px;
+  }
+  .window-title {
+    display: inline-block;
+    background: var(--window-bg);
+    border: 3px solid var(--frame);
+    border-radius: 8px;
+    padding: 2px 18px;
+    margin: 0 auto 18px;
+    font-size: 1.05rem;
+    letter-spacing: 0.15em;
+  }
+
+  section { max-width: 880px; margin: 0 auto; padding: 48px 18px; }
+
+  /* ===== ヒーロー(タイトル画面) ===== */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 18px 80px;
+  }
+  .hero-crest { font-size: 2.6rem; letter-spacing: 0.4em; margin-bottom: 18px; }
+  .hero-sub {
+    font-size: 0.95rem;
+    letter-spacing: 0.5em;
+    color: var(--platinum);
+    margin-bottom: 10px;
+  }
+  h1.hero-title {
+    font-size: clamp(2.2rem, 8vw, 4.6rem);
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+    background: linear-gradient(180deg, #ffffff 0%, #e5e4e2 35%, #9fb2c8 55%, #ffffff 75%, #c0c0c0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 4px 0 rgba(0,0,0,0.8)) drop-shadow(0 0 24px rgba(0,229,255,0.25));
+    margin-bottom: 26px;
+  }
+  .hero-tagline { font-size: clamp(1rem, 3vw, 1.3rem); margin-bottom: 44px; }
+  .press-start {
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+    animation: blink 1.1s steps(2) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+  .btn {
+    display: inline-block;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    text-decoration: none;
+    background: var(--window-bg);
+    border: 3px solid var(--frame);
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 2px var(--window-bg), inset 0 0 0 4px var(--frame);
+    padding: 12px 26px;
+    letter-spacing: 0.1em;
+    transition: transform 0.08s steps(1), background 0.08s steps(1);
+  }
+  .btn:hover { background: #1a1f38; transform: translateY(-2px); }
+  .btn:hover::before { content: "▶ "; color: var(--accent); }
+  .btn.primary { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--window-bg), inset 0 0 0 4px var(--accent); color: var(--accent); }
+  .scroll-hint { margin-top: 56px; font-size: 0.85rem; color: var(--gray); }
+  .scroll-hint .v { display: block; font-size: 1.2rem; color: var(--text); animation: bob 1s steps(2) infinite; }
+  @keyframes bob { 50% { transform: translateY(6px); } }
+
+  /* ===== メッセージウィンドウ(ストーリー) ===== */
+  .story-window { text-align: left; font-size: clamp(0.95rem, 2.6vw, 1.15rem); }
+  .story-window p + p { margin-top: 1.2em; }
+  .story-window .cursor {
+    display: inline-block;
+    margin-left: 6px;
+    animation: blink 1s steps(2) infinite;
+  }
+  .em { color: var(--accent); }
+  .em-cyan { color: var(--cyan); }
+
+  .section-head { text-align: center; margin-bottom: 26px; }
+
+  /* ===== コマンドメニュー ===== */
+  .command-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 18px;
+  }
+  .command {
+    display: block;
+    padding: 20px 20px 18px;
+    position: relative;
+  }
+  .command h3 { font-size: 1.15rem; font-weight: normal; margin-bottom: 8px; letter-spacing: 0.08em; }
+  .command h3::before { content: "▶ "; color: var(--accent); }
+  .command p { font-size: 0.92rem; color: #cfd3e8; }
+
+  /* ===== 図鑑テーブル ===== */
+  .zukan-scroll { overflow-x: auto; }
+  table.zukan {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  table.zukan th, table.zukan td {
+    border-bottom: 2px dotted #3a3f5e;
+    padding: 12px 10px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  table.zukan th { color: var(--gray); font-weight: normal; font-size: 0.85rem; letter-spacing: 0.1em; }
+  table.zukan td.emoji { font-size: 1.5rem; }
+  .stars-cell { letter-spacing: 0.1em; }
+  .tag {
+    display: inline-block;
+    border: 2px solid currentColor;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 0.82rem;
+  }
+
+  /* ===== 戦闘メッセージ ===== */
+  .battle-window { font-size: clamp(0.95rem, 2.6vw, 1.15rem); }
+  .battle-window p { margin: 0.35em 0; }
+  .battle-name { color: var(--accent); }
+
+  /* ===== ステータス風 機能一覧 ===== */
+  .status-list { list-style: none; font-size: 0.98rem; }
+  .status-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 2px dotted #3a3f5e;
+    padding: 10px 2px;
+    flex-wrap: wrap;
+  }
+  .status-list li:last-child { border-bottom: none; }
+  .status-list .k { color: var(--platinum); }
+  .status-list .v2 { color: #cfd3e8; text-align: right; flex: 1; min-width: 200px; }
+
+  /* ===== ダウンロード ===== */
+  .dl { text-align: center; }
+  .dl .note { margin-top: 18px; font-size: 0.88rem; color: var(--gray); }
+
+  /* ===== フッター ===== */
+  footer {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 18px 60px;
+    font-size: 0.8rem;
+    color: var(--gray);
+    line-height: 2;
+  }
+  footer h2 { font-size: 0.95rem; font-weight: normal; color: var(--text); margin-bottom: 10px; letter-spacing: 0.15em; }
+  footer ul { padding-left: 1.4em; }
+  footer a { color: #9fc6ff; }
+  .footer-end { text-align: center; margin-top: 36px; letter-spacing: 0.3em; }
+
+  @media (max-width: 600px) {
+    .window { padding: 20px 16px; }
+    section { padding: 36px 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stars, .press-start, .scroll-hint .v, .story-window .cursor { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main>
+
+  <!-- ===== タイトル画面 ===== -->
+  <header class="hero">
+    <div class="hero-crest" aria-hidden="true">📡</div>
+    <p class="hero-sub">SAIKYO PLATINUM QUEST</p>
+    <h1 class="hero-title">最強<br>プラチナクエスト</h1>
+    <p class="hero-tagline">電波を あつめて モンスターを つかまえろ。</p>
+    <p class="press-start">▼ TAP TO START</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#download">ぼうけんを はじめる</a>
+    </div>
+    <p class="scroll-hint">したに スクロールすると<br>ものがたりが はじまる<span class="v">▼</span></p>
+  </header>
+
+  <!-- ===== ストーリー ===== -->
+  <section id="story">
+    <div class="section-head"><span class="window-title">ものがたり</span></div>
+    <div class="window story-window">
+      <p>そのむかし――<br>
+      くにに <span class="em">700MHz</span> の でんぱ<br>
+      <span class="em">『プラチナバンド』</span>が ときはなたれた。</p>
+      <p>でんぱの とどくところ すべてに<br>
+      きちきょくの せいれい……<br>
+      <span class="em-cyan">でんぱモンスター</span>が やどるという。</p>
+      <p>スマホを かたてに まちへ でよ。<br>
+      でんぱを はかり きろくし<br>
+      いまだ みぬ さいきょうの<br>
+      <span class="em">プラチナモンスター</span>を さがすのだ。<span class="cursor">▼</span></p>
+    </div>
+  </section>
+
+  <!-- ===== コマンド(遊び方) ===== -->
+  <section id="commands">
+    <div class="section-head"><span class="window-title">コマンド</span></div>
+    <div class="command-grid">
+      <div class="window command">
+        <h3>けいそく する</h3>
+        <p>GPSと でんぱの つよさを ていきてきに きろく。バンド・電界強度・ping を じどうで はかる。</p>
+      </div>
+      <div class="window command">
+        <h3>ちずを みる</h3>
+        <p>あるいた みちが ちずのうえに いろつきの ドットで のこる。じぶんだけの でんぱマップが そだつ。</p>
+      </div>
+      <div class="window command">
+        <h3>つかまえる</h3>
+        <p>きちきょくごとに きまった モンスターが うまれる。おなじ ばしょでは いつも おなじ かおに あえる。</p>
+      </div>
+      <div class="window command">
+        <h3>ずかんを ひらく</h3>
+        <p>つかまえた モンスターを コレクション。ぜんしゅるい コンプリートを めざせ。</p>
+      </div>
+      <div class="window command">
+        <h3>スタンプラリー</h3>
+        <p>みちのえきや アリーナに ちかづいて チェックイン。たびの きねんが スタンプに なる。</p>
+      </div>
+      <div class="window command">
+        <h3>もちものを だす</h3>
+        <p>けいそくデータは CSVで エクスポート。じぶんの きろくは じぶんの もの。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 戦闘風メッセージ ===== -->
+  <section>
+    <div class="window battle-window">
+      <p>まちかどで けいそくを はじめた!</p>
+      <p><span class="battle-name">でんせつのプラチナモンスター</span>が あらわれた!</p>
+      <p>Band 3 / -87dBm …… でんぱは かなり つよい!</p>
+      <p>モンスターを ほかくした! ずかんに とうろくされた! <span class="cursor" style="animation: blink 1s steps(2) infinite;">▼</span></p>
+    </div>
+  </section>
+
+  <!-- ===== モンスター図鑑 ===== -->
+  <section id="zukan">
+    <div class="section-head"><span class="window-title">モンスターずかん</span></div>
+    <div class="window zukan-scroll">
+      <table class="zukan">
+        <thead>
+          <tr><th></th><th>なまえ</th><th>レアど</th><th>でんぱ</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="emoji">💠</td>
+            <td>神話のミリメタルモンスター</td>
+            <td class="stars-cell"><span class="tag" style="color: var(--cyan);">★★★★★★ 神話</span></td>
+            <td>ミリ波 n257</td>
+          </tr>
+          <tr>
+            <td class="emoji">🤩</td>
+            <td>幻のプラチナ5Gモンスター</td>
+            <td class="stars-cell"><span class="tag" style="color: var(--accent);">★★★★★ 幻</span></td>
+            <td>プラチナ5G</td>
+          </tr>
+          <tr>
+            <td class="emoji">👑</td>
+            <td>伝説のプラチナモンスター</td>
+            <td class="stars-cell"><span class="tag" style="color: var(--purple);">★★★★☆ 伝説</span></td>
+            <td>プラチナバンド</td>
+          </tr>
+          <tr>
+            <td class="emoji">😆</td>
+            <td>精鋭の5G Sub6モンスター</td>
+            <td class="stars-cell"><span class="tag" style="color: var(--blue);">★★★☆☆ 精鋭</span></td>
+            <td>5G Sub6</td>
+          </tr>
+          <tr>
+            <td class="emoji">💀</td>
+            <td>圏外の亡霊</td>
+            <td class="stars-cell"><span class="tag" style="color: var(--gray);">★★★☆☆ 闇レア</span></td>
+            <td>圏外</td>
+          </tr>
+          <tr>
+            <td class="emoji">👹</td>
+            <td>親切な隣人の鬼</td>
+            <td class="stars-cell"><span class="tag" style="color: var(--brown);">★★☆☆☆</span></td>
+            <td>よわい でんぱ</td>
+          </tr>
+          <tr>
+            <td class="emoji">🙂</td>
+            <td>LTEモンスター</td>
+            <td class="stars-cell"><span class="tag" style="color: var(--green);">★☆☆☆☆ コモン</span></td>
+            <td>LTE</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 14px; font-size: 0.85rem; color: var(--gray);">※ モンスターは きちきょくID から けっていろんてきに うまれる。であいは うんめい、すがたは いっしょう かわらない。</p>
+    </div>
+  </section>
+
+  <!-- ===== つよさ(技術仕様) ===== -->
+  <section id="spec">
+    <div class="section-head"><span class="window-title">つよさ を みる</span></div>
+    <div class="window">
+      <ul class="status-list">
+        <li><span class="k">たいおうOS</span><span class="v2">Android 8.0 (API 26) いじょう</span></li>
+        <li><span class="k">けいそく</span><span class="v2">バンド / 電界強度 / ping / 5G NSA・SA はんてい</span></li>
+        <li><span class="k">ちず</span><span class="v2">OpenStreetMap (osmdroid)</span></li>
+        <li><span class="k">つくり</span><span class="v2">Kotlin / Jetpack Compose / Room</span></li>
+        <li><span class="k">データ</span><span class="v2">たんまつ ないに ほぞん・CSV エクスポートたいおう</span></li>
+        <li><span class="k">ねだん</span><span class="v2">むりょう で あそべる よてい</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== ダウンロード ===== -->
+  <section id="download">
+    <div class="section-head"><span class="window-title">ぼうけんを はじめる</span></div>
+    <div class="window dl">
+      <p style="font-size: 1.1rem; margin-bottom: 24px;">Google Play にて じゅんびちゅう!<br>いましばらく おまちください。</p>
+      <p class="note">こうかい じょうほうは この ページで おしらせします。</p>
+    </div>
+  </section>
+
+  <!-- ===== フッター・免責 ===== -->
+  <footer>
+    <h2>おことわり</h2>
+    <ul>
+      <li>本アプリは個人が開発した<strong>非公式</strong>アプリであり、楽天モバイル株式会社およびその関連会社とは一切関係ありません。「楽天モバイル」その他の商標は各権利者に帰属します。</li>
+      <li>本サイトおよび本アプリはレトロRPG風のオリジナル表現を用いたものであり、特定のゲーム作品・ゲーム会社とは一切関係ありません。</li>
+      <li>電波測定結果は端末環境に依存する参考値であり、正確性を保証するものではありません。</li>
+      <li>道の駅データ: 出典 国土交通省 国土数値情報(道の駅データ P35-18)を加工して作成。地図データ: © OpenStreetMap contributors。</li>
+      <li>本サイトは <a href="https://fonts.google.com/specimen/DotGothic16">DotGothic16</a>(SIL Open Font License)を使用しています。</li>
+      <li><a href="./privacy.html">プライバシーポリシー</a></li>
+    </ul>
+    <p class="footer-end">— つづく —</p>
+  </footer>
+
+</main>
+</body>
+</html>
