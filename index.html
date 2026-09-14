@@ -19,6 +19,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@platinum_quest">
+<meta name="twitter:creator" content="@platinum_quest">
 <meta name="twitter:title" content="最強プラチナクエスト — 電波をあつめてモンスターをつかまえろ">
 <meta name="twitter:description" content="電波を計測すると、基地局ごとに固有のモンスターが出現。700MHz帯は「伝説」、ミリ波は「神話」。歩いて集めるレトロRPG風Androidアプリ。">
 <meta name="twitter:image" content="https://platinumquest.github.io/assets/ogp.png">
@@ -226,7 +228,33 @@
 
   /* ===== ダウンロード ===== */
   .dl { text-align: center; }
-  .dl .note { margin-top: 18px; font-size: 0.88rem; color: var(--gray); }
+  .note { margin-top: 18px; font-size: 0.88rem; color: var(--gray); }
+
+  /* ウィンドウ内のリンク(既定の濃紺だと暗い背景で読めないため) */
+  .window a { color: var(--cyan); }
+
+  /* ===== クローズドβ募集 ===== */
+  .beta { text-align: center; }
+  .beta-lead { font-size: clamp(1rem, 2.8vw, 1.2rem); margin-bottom: 8px; }
+  .beta-count {
+    display: inline-block;
+    border: 3px solid var(--accent);
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 2px var(--window-bg), inset 0 0 0 4px var(--accent);
+    color: var(--accent);
+    padding: 6px 22px;
+    margin: 18px 0 24px;
+    letter-spacing: 0.12em;
+  }
+  .beta .status-list { text-align: left; margin-top: 6px; }
+  .beta-steps { list-style: none; text-align: left; margin-top: 24px; font-size: 0.95rem; }
+  .beta-steps li { padding: 8px 0 8px 2.2em; position: relative; }
+  .beta-steps li::before {
+    content: attr(data-step);
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
 
   /* ===== フッター ===== */
   footer {
@@ -245,6 +273,9 @@
   @media (max-width: 600px) {
     .window { padding: 20px 16px; }
     section { padding: 36px 14px; }
+    /* せまい画面では項目名と内容を縦に積む(折り返し時の右寄せを避けて読みやすく) */
+    .status-list li { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .status-list .v2 { text-align: left; min-width: 0; width: 100%; }
   }
   @media (prefers-reduced-motion: reduce) {
     .stars, .press-start, .scroll-hint .v, .story-window .cursor { animation: none; }
@@ -263,7 +294,8 @@
     <p class="hero-tagline">電波を あつめて モンスターを つかまえろ。</p>
     <p class="press-start">▼ TAP TO START</p>
     <div class="hero-cta">
-      <a class="btn primary" href="#download">ぼうけんを はじめる</a>
+      <a class="btn primary" href="#beta">βテスターに なる</a>
+      <a class="btn" href="https://x.com/platinum_quest" target="_blank" rel="noopener">X を フォロー</a>
     </div>
     <p class="scroll-hint">したに スクロールすると<br>ものがたりが はじまる<span class="v">▼</span></p>
   </header>
@@ -398,12 +430,43 @@
     </div>
   </section>
 
+  <!-- ===== クローズドβ募集 ===== -->
+  <section id="beta">
+    <div class="section-head"><span class="window-title">なかまを ぼしゅうちゅう</span></div>
+    <div class="window beta">
+      <p class="beta-lead">いっしょに でんぱの ちずを うめる<br><span class="em">クローズドβテスター</span>を さがしています。</p>
+      <p class="beta-count">のこり ぼしゅう 20めい</p>
+
+      <ul class="status-list">
+        <li><span class="k">たいおう たんまつ</span><span class="v2">Android 8.0 (API 26) いじょう</span></li>
+        <li><span class="k">ひつような もの</span><span class="v2">Google アカウント(テスト参加に つかいます)</span></li>
+        <li><span class="k">おねがいしたい きかん</span><span class="v2">14にち いじょう インストールしたまま</span></li>
+        <li><span class="k">あそびかた</span><span class="v2">がいしゅつの ついでに ときどき きどう</span></li>
+        <li><span class="k">ふぐあい ほうこく</span><span class="v2">X の リプライ・DM で きがるに</span></li>
+        <li><span class="k">ひよう</span><span class="v2">むりょう・こうこくなし・かきん なし</span></li>
+      </ul>
+
+      <ol class="beta-steps">
+        <li data-step="①">X アカウント <a href="https://x.com/platinum_quest" target="_blank" rel="noopener">@platinum_quest</a> を フォロー</li>
+        <li data-step="②">こていポストから テスト参加リンクを ひらく</li>
+        <li data-step="③">Google Play で インストール、ぼうけんへ</li>
+      </ol>
+
+      <div class="hero-cta" style="margin-top: 30px;">
+        <!-- Googleグループを作成したら、下のボタンを参加リンクに差し替えてください
+             例) <a class="btn primary" href="https://groups.google.com/g/xxxxx" target="_blank" rel="noopener">テスターに もうしこむ</a> -->
+        <a class="btn primary" href="https://x.com/platinum_quest" target="_blank" rel="noopener">X で もうしこむ</a>
+      </div>
+      <p class="note">さいしんの ぼしゅう じょうきょうは X で おしらせします。</p>
+    </div>
+  </section>
+
   <!-- ===== ダウンロード ===== -->
   <section id="download">
     <div class="section-head"><span class="window-title">ぼうけんを はじめる</span></div>
     <div class="window dl">
-      <p style="font-size: 1.1rem; margin-bottom: 24px;">Google Play にて じゅんびちゅう!<br>いましばらく おまちください。</p>
-      <p class="note">こうかい じょうほうは この ページで おしらせします。</p>
+      <p style="font-size: 1.1rem; margin-bottom: 24px;">Google Play にて じゅんびちゅう!<br>いまは <a href="#beta">クローズドβ</a> で さきに あそべます。</p>
+      <p class="note">こうかい じょうほうは この ページと X で おしらせします。</p>
     </div>
   </section>
 
@@ -417,6 +480,7 @@
       <li>道の駅データ: 出典 国土交通省 国土数値情報(道の駅データ P35-18)を加工して作成。地図データ: © OpenStreetMap contributors。</li>
       <li>本サイトは <a href="https://fonts.google.com/specimen/DotGothic16">DotGothic16</a>(SIL Open Font License)を使用しています。</li>
       <li><a href="./privacy.html">プライバシーポリシー</a></li>
+      <li>おといあわせ: X <a href="https://x.com/platinum_quest" target="_blank" rel="noopener">@platinum_quest</a></li>
     </ul>
     <p class="footer-end">— つづく —</p>
   </footer>
