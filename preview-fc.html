@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC風UI 試作</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #ffd700; --cyan: #00e5ff; --gray: #9e9e9e; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    color: #fff;
+    font-family: 'DotGothic16', monospace, sans-serif;
+    line-height: 1.9;
+    -webkit-font-smoothing: none;
+    padding: 24px 16px 80px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .label {
+    color: #000; background: #fff;
+    display: block; width: fit-content; padding: 0 10px; margin: 48px 0 6px;
+    font-size: 0.85rem;
+  }
+  .label:first-child { margin-top: 0; }
+  .desc { color: var(--gray); font-size: 0.85rem; margin-bottom: 20px; }
+
+  /* ===== 現行(比較用) ===== */
+  .cur-btn {
+    display: inline-block; color: #f5f5f5; text-decoration: none;
+    background: #0a0c1a; border: 3px solid #f5f5f5; border-radius: 8px;
+    box-shadow: inset 0 0 0 2px #0a0c1a, inset 0 0 0 4px #f5f5f5;
+    padding: 12px 26px; letter-spacing: 0.1em; margin: 0 8px 8px 0;
+  }
+  .cur-btn.primary { color: var(--accent); border-color: var(--accent); box-shadow: inset 0 0 0 2px #0a0c1a, inset 0 0 0 4px var(--accent); }
+  .cur-btn:hover::before { content: "▶ "; color: var(--accent); }
+
+  /* ===== FC風ウィンドウ ===== */
+  .fc {
+    position: relative;
+    background: #000;
+    border: 4px solid #fff;
+    border-radius: 6px;
+    padding: 22px 22px 18px;
+    margin-top: 14px;
+  }
+  /* 見出しを上辺の線に食い込ませる */
+  .fc-title {
+    position: absolute;
+    top: -0.95em; left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    padding: 0 10px;
+    white-space: nowrap;
+    letter-spacing: 0.1em;
+  }
+  .fc-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+
+  /* コマンド項目: 箱なし、選択中だけ ▶ が点滅 */
+  .cmd { list-style: none; display: grid; gap: 4px 28px; }
+  .cmd.two { grid-template-columns: repeat(2, max-content); }
+  .cmd a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 2px 0 2px 1.4em;
+    position: relative;
+    outline: none;
+    letter-spacing: 0.08em;
+  }
+  .cmd a::before {
+    content: "▶";
+    position: absolute; left: 0;
+    visibility: hidden;
+  }
+  .cmd a.on::before { visibility: visible; animation: blink 0.8s steps(1) infinite; }
+  .cmd a:active { transform: translateY(1px); }
+  @keyframes blink { 50% { visibility: hidden; } }
+
+  /* パターンC: ブランド色アクセント */
+  .accent .cmd a.on::before { color: var(--accent); }
+  .accent .cmd a.on { color: var(--accent); }
+  .accent .em { color: var(--accent); }
+
+  .msg p + p { margin-top: 0.4em; }
+  .msg .next { display: inline-block; animation: blink 0.8s steps(1) infinite; }
+
+  .hint { color: var(--gray); font-size: 0.8rem; margin-top: 10px; }
+
+  @media (max-width: 480px) {
+    .cmd.two { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cmd a.on::before, .msg .next { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="label">A. げんこう(ひかくよう)</p>
+  <p class="desc">二重線の ボタンを ならべた いまの かたち。</p>
+  <a class="cur-btn primary" href="#">βテスターに なる</a><a class="cur-btn" href="#">X を フォロー</a>
+
+  <p class="label">B. FC ドラクエ3ふう(しろ のみ)</p>
+  <p class="desc">くろ と しろ だけ。ボタンは コマンドウィンドウの こうもく。カーソル/やじるしキーで ▶ が うごく。</p>
+  <div class="fc-row">
+    <div class="fc" style="min-width: 220px;">
+      <span class="fc-title">コマンド</span>
+      <ul class="cmd" data-menu>
+        <li><a href="#" class="on">βテスターに なる</a></li>
+        <li><a href="#">X を フォロー</a></li>
+        <li><a href="#">ずかんを みる</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fc msg">
+    <p>まちかどで けいそくを はじめた!</p>
+    <p>でんせつの プラチナモンスターが あらわれた!</p>
+    <p>モンスターを ほかくした! <span class="next">▼</span></p>
+  </div>
+
+  <p class="label">C. FC ドラクエ3ふう + ブランドいろ</p>
+  <p class="desc">こうぞうは B と おなじ。えらんでいる こうもくと だいじな ことばだけ きんいろ。</p>
+  <div class="accent">
+    <div class="fc">
+      <span class="fc-title">なかまを ぼしゅうちゅう</span>
+      <ul class="cmd two" data-menu>
+        <li><a href="#" class="on">テスターに もうしこむ</a></li>
+        <li><a href="#">X を フォロー</a></li>
+        <li><a href="#">つよさを みる</a></li>
+        <li><a href="#">ずかんを ひらく</a></li>
+      </ul>
+    </div>
+    <div class="fc msg">
+      <p>いっしょに でんぱの ちずを うめる</p>
+      <p><span class="em">クローズドβテスター</span>を さがしています。</p>
+      <p>のこり ぼしゅう <span class="em">20めい</span> <span class="next">▼</span></p>
+    </div>
+  </div>
+
+  <p class="hint">※ しさく ページ。リンクは ダミー。</p>
+</div>
+
+<script>
+  // コマンドメニュー: ホバー/フォーカス/やじるしキーで ▶ カーソルを うごかす
+  document.querySelectorAll('[data-menu]').forEach(menu => {
+    const items = [...menu.querySelectorAll('a')];
+    const cols = menu.classList.contains('two') && innerWidth > 480 ? 2 : 1;
+    const select = i => {
+      items.forEach(a => a.classList.remove('on'));
+      items[i].classList.add('on');
+    };
+    items.forEach((a, i) => {
+      a.addEventListener('mouseenter', () => select(i));
+      a.addEventListener('focus', () => select(i));
+      a.addEventListener('click', e => e.preventDefault());
+      a.addEventListener('keydown', e => {
+        const step = { ArrowDown: cols, ArrowUp: -cols, ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        if (step === undefined || (cols === 1 && /Left|Right/.test(e.key))) return;
+        const n = (i + step + items.length) % items.length;
+        e.preventDefault();
+        items[n].focus();
+      });
+    });
+  });
+</script>
+</body>
+</html>
